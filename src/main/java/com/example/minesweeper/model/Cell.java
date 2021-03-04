@@ -26,7 +26,7 @@ public class Cell {
     @Enumerated(EnumType.STRING)
     private CellState state;
 
-    private boolean hasAMine;
+    private boolean mined;
 
     private int surroundingMines;
 
@@ -38,10 +38,24 @@ public class Cell {
     public Cell() {}
 
     public Cell(MatrixRow matrixRow) {
-        this.hasAMine = false;
+        this.mined = false;
         this.state = CellState.UNOPENED;
         this.matrixRow = matrixRow;
         this.surroundingMines = 0;
+    }
+
+    public void click(Action action) {
+        switch(action) {
+            case LEFT_CLICK:
+                if (!this.state.equals(CellState.OPENED)) this.state = CellState.OPENED;
+            break;
+            case RIGHT_CLICK:
+                if (this.state.equals(CellState.UNOPENED)) this.state = CellState.FLAGGED;
+                if (this.state.equals(CellState.FLAGGED)) this.state = CellState.QUESTION_MARK;
+                if (this.state.equals(CellState.QUESTION_MARK)) this.state = CellState.UNOPENED;
+            break;
+            default:
+        }
     }
 
     public Long getId() {
@@ -60,12 +74,12 @@ public class Cell {
         this.state = state;
     }
 
-    public boolean hasAMine() {
-        return hasAMine;
+    public boolean isMined() {
+        return mined;
     }
 
-    public void setHasAMine(boolean hasAMine) {
-        this.hasAMine = hasAMine;
+    public void setMined(boolean mined) {
+        this.mined = mined;
     }
 
     public int getSurroundingMines() {

@@ -3,17 +3,16 @@ package com.example.minesweeper.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.List;
-import java.util.function.IntUnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -25,12 +24,15 @@ public class MatrixRow {
     @JsonIgnore
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
+    @JoinColumn(name = "board_id")
     @JsonIgnore
     private Board board;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "matrixRow", cascade = CascadeType.ALL)
     private List<Cell> cells;
+
+    public MatrixRow() {}
 
     public MatrixRow(Board board, int columnSize) {
         this.cells = IntStream.range(0, columnSize).boxed().map(v -> new Cell(this)).collect(Collectors.toList());

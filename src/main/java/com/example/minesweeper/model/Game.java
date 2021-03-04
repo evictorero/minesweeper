@@ -19,6 +19,8 @@ public class Game {
 
     private LocalDateTime startTime;
 
+    private GameState state;
+
     private String userName;
 
     @OneToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "game")
@@ -30,6 +32,7 @@ public class Game {
         this.userName = userName;
         this.board = new Board(rowSize, columnSize, minePercentage);
         this.board.setGame(this);
+        this.state = GameState.INPROGRESS;
     }
 
     public Long getId() {
@@ -54,5 +57,21 @@ public class Game {
 
     public void setBoard(Board board) {
         this.board = board;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public GameState getState() {
+        return state;
+    }
+
+    public void setState(GameState state) {
+        this.state = state;
     }
 }

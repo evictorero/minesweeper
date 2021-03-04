@@ -77,18 +77,18 @@ public class Board {
                        AtomicInteger mineQuantity = new AtomicInteger();
 
                        // row above
-                       this.getByMatrixNotation(i - 1, j).ifPresent( it -> { if(it.hasAMine()) mineQuantity.getAndIncrement(); } );
-                       this.getByMatrixNotation(i - 1, j - 1).ifPresent( it -> { if(it.hasAMine()) mineQuantity.getAndIncrement(); } );
-                       this.getByMatrixNotation(i - 1, j + 1).ifPresent( it -> { if(it.hasAMine()) mineQuantity.getAndIncrement(); } );
+                       this.getByMatrixNotation(i - 1, j).ifPresent( it -> { if(it.isMined()) mineQuantity.getAndIncrement(); } );
+                       this.getByMatrixNotation(i - 1, j - 1).ifPresent( it -> { if(it.isMined()) mineQuantity.getAndIncrement(); } );
+                       this.getByMatrixNotation(i - 1, j + 1).ifPresent( it -> { if(it.isMined()) mineQuantity.getAndIncrement(); } );
 
                        // center
-                       this.getByMatrixNotation(i, j - 1).ifPresent( it -> { if(it.hasAMine()) mineQuantity.getAndIncrement(); } );
-                       this.getByMatrixNotation(i, j + 1).ifPresent( it -> { if(it.hasAMine()) mineQuantity.getAndIncrement(); } );
+                       this.getByMatrixNotation(i, j - 1).ifPresent( it -> { if(it.isMined()) mineQuantity.getAndIncrement(); } );
+                       this.getByMatrixNotation(i, j + 1).ifPresent( it -> { if(it.isMined()) mineQuantity.getAndIncrement(); } );
 
                        // row below
-                       this.getByMatrixNotation(i + 1, j - 1).ifPresent( it -> { if(it.hasAMine()) mineQuantity.getAndIncrement(); } );
-                       this.getByMatrixNotation(i + 1, j).ifPresent( it -> { if(it.hasAMine()) mineQuantity.getAndIncrement(); } );
-                       this.getByMatrixNotation(i + 1, j + 1).ifPresent( it -> { if(it.hasAMine()) mineQuantity.getAndIncrement(); } );
+                       this.getByMatrixNotation(i + 1, j - 1).ifPresent( it -> { if(it.isMined()) mineQuantity.getAndIncrement(); } );
+                       this.getByMatrixNotation(i + 1, j).ifPresent( it -> { if(it.isMined()) mineQuantity.getAndIncrement(); } );
+                       this.getByMatrixNotation(i + 1, j + 1).ifPresent( it -> { if(it.isMined()) mineQuantity.getAndIncrement(); } );
 
                        this.rows.get(i).getCells().get(j).setSurroundingMines(mineQuantity.intValue());
 
@@ -105,8 +105,8 @@ public class Board {
 
             var cell = this.rows.get(row).getCells().get(column);
 
-            if (!cell.hasAMine()) {
-                cell.setHasAMine(true);
+            if (!cell.isMined()) {
+                cell.setMined(true);
                 mineQuantity--;
             }
         }
