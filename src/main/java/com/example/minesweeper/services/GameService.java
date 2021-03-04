@@ -43,6 +43,9 @@ public class GameService {
         cell.applyAction(action);
         if (Action.OPEN.equals(action) && cell.isMined()) {
             game.setState(GameState.FINISHED);
+        } else if (Action.OPEN.equals(action) && cell.getSurroundingMines() == 0) {
+            // open recursively
+            game.getBoard().openSurroundingCells(row, column);
         }
     }
 

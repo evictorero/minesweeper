@@ -130,4 +130,19 @@ class GameServiceTest {
         assertEquals(GameState.INPROGRESS, updatedGame.getState());
         assertEquals(CellState.UNOPENED, updatedGame.getBoard().getRows().get(1).getCells().get(1).getState());
     }
+
+    @Test
+    void playOpenCellWithNoMinesShouldOpenAll() {
+        var customGame = new Game(USER_NAME, ROW_SIZE, COLUMN_SIZE, 0);
+
+        when(gameRepository.findById(any())).thenReturn(java.util.Optional.of(customGame));
+        when(gameRepository.save(any())).thenReturn(customGame);
+
+        var updatedGame = this.gameService.play(1L, Action.OPEN, 0, 0);
+
+        var listOfCellsUnopened = updatedGame.getBoard().getRows().stream().map(MatrixRow::getCells).flatMap(Collection::stream).filter(it -> it.getState() != CellState.OPENED).collect(Collectors.toList());
+
+        assertEquals(0, listOfCellsUnopened.size());
+
+    }
 }

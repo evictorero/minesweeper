@@ -71,29 +71,58 @@ public class Board {
         }
     }
 
+    public void openSurroundingCells(int row, int column) {
+        // above
+        openAdjacentCell(row - 1, column - 1);
+        openAdjacentCell(row - 1, column);
+        openAdjacentCell(row - 1, column + 1);
+        // center
+        openAdjacentCell(row, column - 1);
+        openAdjacentCell(row, column + 1);
+        // below
+        openAdjacentCell(row + 1, column - 1);
+        openAdjacentCell(row + 1, column);
+        openAdjacentCell(row + 1, column + 1);
+    }
+
+    private void openAdjacentCell(int row, int column) {
+        this.getByMatrixNotation(row, column).ifPresent( it -> {
+            if (it.getSurroundingMines() == 0 && !it.isMined()
+                    && !CellState.OPENED.equals(it.getState())) {
+                it.setState(CellState.OPENED);
+                openSurroundingCells(row, column);
+            }
+        });
+    }
+
     private void calculateAdjacentMines() {
-               for (int i = 0; i < this.rowSize; i++) {
-                   for (int j = 0; j < this.columnSize; j++) {
-                       AtomicInteger mineQuantity = new AtomicInteger();
+        for (int i = 0; i < this.rowSize; i++) {
+            for (int j = 0; j < this.columnSize; j++) {
+                AtomicInteger mineQuantity = new AtomicInteger();
 
-                       // row above
-                       this.getByMatrixNotation(i - 1, j).ifPresent( it -> { if(it.isMined()) mineQuantity.getAndIncrement(); } );
-                       this.getByMatrixNotation(i - 1, j - 1).ifPresent( it -> { if(it.isMined()) mineQuantity.getAndIncrement(); } );
-                       this.getByMatrixNotation(i - 1, j + 1).ifPresent( it -> { if(it.isMined()) mineQuantity.getAndIncrement(); } );
+                // row above
+                countAdjacentMines(i - 1, j - 1, mineQuantity);
+                countAdjacentMines(i - 1, j, mineQuantity);
+                countAdjacentMines(i - 1, j + 1, mineQuantity);
 
-                       // center
-                       this.getByMatrixNotation(i, j - 1).ifPresent( it -> { if(it.isMined()) mineQuantity.getAndIncrement(); } );
-                       this.getByMatrixNotation(i, j + 1).ifPresent( it -> { if(it.isMined()) mineQuantity.getAndIncrement(); } );
+                // center
+                countAdjacentMines(i, j - 1, mineQuantity);
+                countAdjacentMines(i, j + 1, mineQuantity);
 
-                       // row below
-                       this.getByMatrixNotation(i + 1, j - 1).ifPresent( it -> { if(it.isMined()) mineQuantity.getAndIncrement(); } );
-                       this.getByMatrixNotation(i + 1, j).ifPresent( it -> { if(it.isMined()) mineQuantity.getAndIncrement(); } );
-                       this.getByMatrixNotation(i + 1, j + 1).ifPresent( it -> { if(it.isMined()) mineQuantity.getAndIncrement(); } );
+                // row below
+                countAdjacentMines(i + 1, j - 1, mineQuantity);
+                countAdjacentMines(i + 1, j, mineQuantity);
+                countAdjacentMines(i + 1, j + 1, mineQuantity);
 
-                       this.rows.get(i).getCells().get(j).setSurroundingMines(mineQuantity.intValue());
+                this.rows.get(i).getCells().get(j).setSurroundingMines(mineQuantity.intValue());
 
-                   }
+            }
         }
+    }
+
+    private void countAdjacentMines(int i, int j, AtomicInteger mineQuantity) {
+        this.getByMatrixNotation(i, j).ifPresent( it -> { if(it.isMined()) mineQuantity.getAndIncrement(); } );
+
     }
 
     private void addMines() {
