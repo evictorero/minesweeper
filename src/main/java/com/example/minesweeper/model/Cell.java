@@ -44,16 +44,20 @@ public class Cell {
         this.surroundingMines = 0;
     }
 
-    public void click(Action action) {
+    public void applyAction(Action action) {
         switch(action) {
-            case LEFT_CLICK:
+            case OPEN:
                 if (!this.state.equals(CellState.OPENED)) this.state = CellState.OPENED;
-            break;
-            case RIGHT_CLICK:
+                break;
+            case FLAG:
                 if (this.state.equals(CellState.UNOPENED)) this.state = CellState.FLAGGED;
-                if (this.state.equals(CellState.FLAGGED)) this.state = CellState.QUESTION_MARK;
-                if (this.state.equals(CellState.QUESTION_MARK)) this.state = CellState.UNOPENED;
-            break;
+                break;
+             case QUESTION_MARK:
+                 if (this.state.equals(CellState.UNOPENED)) this.state = CellState.QUESTION_MARK;
+                 break;
+            case CLEAR:
+                if (this.state.equals(CellState.OPENED)) this.state = CellState.UNOPENED;
+                break;
             default:
         }
     }

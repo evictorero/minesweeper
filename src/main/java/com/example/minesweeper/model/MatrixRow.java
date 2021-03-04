@@ -29,7 +29,7 @@ public class MatrixRow {
     @JsonIgnore
     private Board board;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "matrixRow", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "matrixRow", cascade = CascadeType.ALL)
     private List<Cell> cells;
 
     public MatrixRow() {}

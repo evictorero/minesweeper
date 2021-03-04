@@ -35,14 +35,13 @@ public class GameService {
         validateMove(game, row, column);
 
         applyMove(game, action, row, column);
-        this.gameRepository.save(game);
-        return game;
+        return this.gameRepository.save(game);
     }
 
     private void applyMove(Game game, Action action, int row, int column) {
         var cell = game.getBoard().getRows().get(row).getCells().get(column);
-        cell.click(action);
-        if (cell.isMined()) {
+        cell.applyAction(action);
+        if (Action.OPEN.equals(action) && cell.isMined()) {
             game.setState(GameState.FINISHED);
         }
     }

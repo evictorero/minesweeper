@@ -6,6 +6,13 @@ public class StartGameDTO {
     private int columnSize;
     private int minePercentage;
 
+    public StartGameDTO(String name, int rowSize, int columnSize, int minePercentage) {
+        this.name = name;
+        this.rowSize = rowSize;
+        this.columnSize = columnSize;
+        this.minePercentage = minePercentage;
+    }
+
     public String getName() {
         return name;
     }
