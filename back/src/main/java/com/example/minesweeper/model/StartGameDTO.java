@@ -10,15 +10,15 @@ public class StartGameDTO {
     private String name;
 
     @NotNull
-    @Range(min=0, max=50)
+    @Range(min=1, max=50)
     private Integer rowSize;
 
     @NotNull
-    @Range(min=0, max=50)
+    @Range(min=1, max=50)
     private Integer columnSize;
 
     @NotNull
-    @Range(min=0, max=100)
+    @Range(min=1, max=100)
     private Integer minePercentage;
 
     public StartGameDTO(@NotBlank String name, @NotNull Integer rowSize, @NotNull Integer columnSize, @NotNull @Range(min = 0, max = 100) Integer minePercentage) {

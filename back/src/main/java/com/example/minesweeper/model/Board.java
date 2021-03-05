@@ -127,7 +127,8 @@ public class Board {
     }
 
     private void addMines() {
-        var mineQuantity = this.rowSize * this.columnSize * this.minePercentage / 100;
+        // at least one mine
+        var mineQuantity = (this.rowSize * this.columnSize * this.minePercentage / 100) + 1;
 
         while (mineQuantity > 0) {
             var row = ThreadLocalRandom.current().nextInt(0, this.rowSize);
@@ -147,6 +148,13 @@ public class Board {
                 .flatMap(Collection::stream)
                 .filter(it -> it.getState().equals(cellState))
                 .count();
+    }
+
+    public boolean hasRemainingCellsUnopened() {
+        return this.getRows().stream()
+                .map(MatrixRow::getCells)
+                .flatMap(Collection::stream)
+                .anyMatch(it -> it.getState().isUnopenedState());
     }
 
     public Long getId() {

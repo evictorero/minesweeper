@@ -33,4 +33,4 @@ build/
 .vscode/
 front/node_modules
 front/build
-back/src/main/resources/build/static
+back/src/main/resources/static

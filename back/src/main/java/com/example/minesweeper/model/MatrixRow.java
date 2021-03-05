@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +31,7 @@ public class MatrixRow {
     private Board board;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "matrixRow", cascade = CascadeType.ALL)
+    @OrderColumn
     private List<Cell> cells;
 
     public MatrixRow() {}

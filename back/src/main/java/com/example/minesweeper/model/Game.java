@@ -81,15 +81,9 @@ public class Game {
     }
 
     private void analizeGameStatus() {
-        var remainingCells = this.getBoard().countCellsByState(CellState.UNOPENED);
-        if (remainingCells == 0) {
+        if (!this.getBoard().hasRemainingCellsUnopened()) {
             this.endGame();
         }
-    }
-
-    private void endGame() {
-        this.state = GameState.FINISHED;
-        // todo stop timer and save time
     }
 
     public void pause() {
@@ -106,11 +100,11 @@ public class Game {
         }
     }
 
-    public void end() {
-        if (GameState.PAUSED.equals(this.state) || GameState.INPROGRESS.equals(this.state)) {
-            this.state = GameState.FINISHED;
+    public void endGame() {
+        if (GameState.INPROGRESS.equals(this.state)) {
             this.timeElapsed = this.timeElapsed + Duration.between(startTime, Instant.now()).toMillis();
         }
+        this.state = GameState.FINISHED;
     }
 
     public String getTimeElapsedFormatted() {

@@ -34,7 +34,8 @@ public class GameService {
     }
 
     public Game play(Long gameId, PlayMoveDTO playMoveDTO) {
-        var game = this.findById(gameId);        validateMove(game, playMoveDTO);
+        var game = this.findById(gameId);
+        validateMove(game, playMoveDTO);
 
         game.applyMove(playMoveDTO.getAction(), playMoveDTO.getRow(), playMoveDTO.getColumn());
 
@@ -64,11 +65,11 @@ public class GameService {
 
     public Game end(long gameId) {
         var game = this.findById(gameId);
-        game.end();
+        game.endGame();
         return this.gameRepository.save(game);
     }
 
-    private Game findById(long gameId) {
+    public Game findById(long gameId) {
         return this.gameRepository.findById(gameId).orElseThrow(() -> new NotFoundException("Game not found"));
     }
 }

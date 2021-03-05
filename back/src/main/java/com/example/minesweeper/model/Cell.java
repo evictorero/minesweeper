@@ -20,7 +20,6 @@ import javax.persistence.Table;
 public class Cell {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     private Long id;
 
     @Enumerated(EnumType.STRING)
@@ -50,13 +49,13 @@ public class Cell {
                 if (!this.state.equals(CellState.OPENED)) this.state = CellState.OPENED;
                 break;
             case FLAG:
-                if (this.state.equals(CellState.UNOPENED)) this.state = CellState.FLAGGED;
+                if (!this.state.equals(CellState.OPENED)) this.state = CellState.FLAGGED;
                 break;
              case QUESTION_MARK:
-                 if (this.state.equals(CellState.UNOPENED)) this.state = CellState.QUESTION_MARK;
+                 if (!this.state.equals(CellState.OPENED)) this.state = CellState.QUESTION_MARK;
                  break;
             case CLEAR:
-                if (this.state.equals(CellState.OPENED)) this.state = CellState.UNOPENED;
+                if (!this.state.equals(CellState.OPENED)) this.state = CellState.UNOPENED;
                 break;
             default:
         }
