@@ -36,7 +36,7 @@ class GameServiceTest {
     static final int COLUMN_SIZE = 3;
     static final String USER_NAME = "test user name";
     static final int MINE_PERCENTAGE = 50;
-    static final int MINE_QUANTITY = 4;
+    static final int MINE_QUANTITY = 5;
     static final int EXPECTED_CELL_QUANTITY = ROW_SIZE * COLUMN_SIZE;
     static final int EXPECTED_UNOPENED_QUANTITY = EXPECTED_CELL_QUANTITY;
 

@@ -1,33 +1,34 @@
 <style>
-  table,
-  td {
-    border: 1px solid grey;
-    border-collapse: collapse;
-  }
-  td {
-    width:32px;
-    height:32px;
-  }
+    table,
+    td {
+        border: 1px solid grey;
+        border-collapse: collapse;
+    }
+
+    td {
+        width: 32px;
+        height: 32px;
+    }
 </style>
 
 Game Status: {{ gameInProgress?.state }}
 <div id="field">
-<table *ngIf="gameInProgress != null">
-  <tr *ngFor="let row of gameInProgress.board.rows; index as x">
-    <td
-            *ngFor="let cell of row.cells; index as y"
-            class="cell"
-            (click)="open(cell, x, y)"
-            (contextmenu)="$event.preventDefault(); rightClick(cell, x, y)"
-    >
-      <!-- <div>Status: {{ cell.status }}</div> -->
-      <div *ngIf="cell.state === 'OPENED' && !cell.mined">{{ cell.surroundingMines }}</div>
-      <div *ngIf="cell.state === 'FLAGGED'"> <img src="../assets/flag2.png" alt="F"> </div>
-      <div *ngIf="cell.state === 'QUESTION_MARK'"> <img src="../assets/question_mark.png" alt="Q"> </div>
-      <div *ngIf="cell.mined && cell.state === 'OPENED'"> <img src="../assets/mine.png" alt="M"> </div>
-    </td>
-  </tr>
-</table>
+    <table *ngIf="gameInProgress != null">
+        <tr *ngFor="let row of gameInProgress.board.rows; index as x">
+            <td
+                    *ngFor="let cell of row.cells; index as y"
+                    class="cell"
+                    (click)="open(cell, x, y)"
+                    (contextmenu)="$event.preventDefault();
+            rightClick(cell, x, y)"
+            >
+                <div *ngIf="cell.state === 'OPENED' && !cell.mined">{{ cell.surroundingMines }}</div>
+                <div *ngIf="cell.state === 'FLAGGED'"><img src="../assets/flag2.png" alt="F"></div>
+                <div *ngIf="cell.state === 'QUESTION_MARK'"><img src="../assets/question_mark.png" alt="Q"></div>
+                <div *ngIf="cell.mined && cell.state === 'OPENED'"><img src="../assets/mine.png" alt="M"></div>
+            </td>
+        </tr>
+    </table>
 </div>
 
 <button (click)="reset()">Restart</button>

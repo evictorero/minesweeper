@@ -128,7 +128,7 @@ public class Board {
 
     private void addMines() {
         // at least one mine
-        var mineQuantity = (this.rowSize * this.columnSize * this.minePercentage / 100) + 1;
+        var mineQuantity = (int) Math.ceil(this.rowSize * this.columnSize * this.minePercentage / 100.0);
 
         while (mineQuantity > 0) {
             var row = ThreadLocalRandom.current().nextInt(0, this.rowSize);
