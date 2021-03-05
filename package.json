@@ -1,0 +1,14 @@
+{
+  "name": "minesweeper",
+  "version": "0.1.0",
+  "scripts": {
+    "heroku-postbuild": "sh front/build-front.sh"
+  },
+  "engines": {
+    "node": "10.14.2",
+    "npm": "6.4.1"
+  },
+  "cacheDirectories": [
+    "front/node_modules"
+  ]
+}
