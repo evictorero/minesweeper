@@ -1,5 +1,8 @@
 package com.example.minesweeper.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +17,9 @@ import java.time.Instant;
 @Entity
 @Table(name="game")
 public class Game {
+    public static final Logger logger = LoggerFactory.getLogger(Game.class);
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -71,8 +77,10 @@ public class Game {
         var cell = this.getBoard().getRows().get(row).getCells().get(column);
         cell.applyAction(action);
         if (Action.OPEN.equals(action) && cell.isMined()) {
+            logger.info("game lost");
             this.endGame();
         } else if (Action.OPEN.equals(action) && cell.getSurroundingMines() == 0) {
+            logger.info("opening adjacent cells with 0 mines");
             // open recursively
             this.getBoard().openSurroundingCells(row, column);
         }
@@ -88,6 +96,7 @@ public class Game {
 
     public void pause() {
         if (GameState.INPROGRESS.equals(this.state)) {
+            logger.info("pausing gameId: {}", this.id);
             this.state = GameState.PAUSED;
             this.timeElapsed = this.timeElapsed + Duration.between(startTime, Instant.now()).toMillis();
         }
@@ -95,13 +104,17 @@ public class Game {
 
     public void resume() {
         if (GameState.PAUSED.equals(this.state)) {
+            logger.info("resuming gameId: {}", this.id);
             this.state = GameState.INPROGRESS;
             this.startTime = Instant.now();
         }
     }
 
     public void endGame() {
+        logger.info("finishing gameId: {}", this.id);
+
         if (GameState.INPROGRESS.equals(this.state)) {
+            logger.info("calculating timeElapsed for gameId: {}", this.id);
             this.timeElapsed = this.timeElapsed + Duration.between(startTime, Instant.now()).toMillis();
         }
         this.state = GameState.FINISHED;

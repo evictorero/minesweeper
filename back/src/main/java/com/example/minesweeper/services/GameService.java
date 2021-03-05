@@ -7,6 +7,8 @@ import com.example.minesweeper.model.GameState;
 import com.example.minesweeper.model.PlayMoveDTO;
 import com.example.minesweeper.model.StartGameDTO;
 import com.example.minesweeper.repositories.GameRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,8 @@ import java.util.List;
 
 @Service
 public class GameService {
+
+    public static final Logger logger = LoggerFactory.getLogger(GameService.class);
 
     private GameRepository gameRepository;
 
@@ -28,12 +32,13 @@ public class GameService {
 
     public List<Game> findGames(String userName) {
         if (userName != null) {
-            return this.gameRepository.findByUserName(userName);
+            return this.gameRepository.findByUserNameAndStateIsNot(userName, GameState.FINISHED);
         }
         return this.gameRepository.findAll();
     }
 
     public Game play(Long gameId, PlayMoveDTO playMoveDTO) {
+        logger.info("playing move {} on cell [{},{}] for game {}", playMoveDTO.getAction(), playMoveDTO.getRow(), playMoveDTO.getColumn(), gameId);
         var game = this.findById(gameId);
         validateMove(game, playMoveDTO);
 
@@ -49,12 +54,13 @@ public class GameService {
         }
 
         if (game.getState() != GameState.INPROGRESS) {
-            throw new BadRequestException("Game is not in progres");
+            throw new BadRequestException("Game is not in progress");
         }
     }
 
     public Game pause(long gameId) {
-        var game = this.findById(gameId);        game.pause();
+        var game = this.findById(gameId);
+        game.pause();
         return this.gameRepository.save(game);
     }
 

@@ -1,6 +1,8 @@
 package com.example.minesweeper.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -24,6 +26,9 @@ import java.util.stream.IntStream;
 @Entity
 @Table(name="board")
 public class Board {
+
+    public static final Logger logger = LoggerFactory.getLogger(Board.class);
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,7 +64,6 @@ public class Board {
     }
 
     private void initialize() {
-
         addMines();
         calculateAdjacentMines();
     }
@@ -129,6 +133,7 @@ public class Board {
     private void addMines() {
         // at least one mine
         var mineQuantity = (int) Math.ceil(this.rowSize * this.columnSize * this.minePercentage / 100.0);
+        logger.info("Creating board {} by {} with {} mines", this.rowSize, this.columnSize, mineQuantity);
 
         while (mineQuantity > 0) {
             var row = ThreadLocalRandom.current().nextInt(0, this.rowSize);

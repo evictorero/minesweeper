@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { GameService } from './game.service';
 import { Action, Cell, CellState, Game, PlayMoveDTO, StartGameDTO } from './entities';
+import { isNotNullOrUndefined } from 'codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'app-root',
@@ -14,15 +15,23 @@ export class AppComponent {
   cell: Cell;
   games: Game[] = [];
   gameInProgress: Game;
+  userName: string;
+
   constructor(private gameService: GameService) {
-    this.gameService.getAll().subscribe(games => {
-      this.games = games;
-      if (games.length > 0) {
-        this.gameInProgress = this.games[0];
-      }
-      console.log(this.games);
-    })
-    this.reset();
+    // this.gameService.getAllByUserName().subscribe(games => {
+    //   this.games = games;
+    //   if (games.length > 0) {
+    //     this.gameInProgress = this.games[0];
+    //   }
+    //   console.log(this.games);
+    // })
+    // this.reset();
+  }
+
+  reset() {
+    this.gameInProgress = null;
+    this.games = [];
+    this.userName = null;
   }
 
   open(cell, row, column) {
@@ -52,9 +61,17 @@ export class AppComponent {
     });
   }
 
-  reset() {
-    // this.board = new Board(this.counter, this.counter);
-    this.counter++;
+  loadGame(game: Game) {
+    this.gameInProgress = game;
+  }
+
+  searchGames() {
+    if (isNotNullOrUndefined(this.userName)) {
+
+    this.gameService.getAllByUserName(this.userName).subscribe(games => {
+      this.games = games;
+    })
+    }
   }
 
   createGame() {
@@ -62,6 +79,18 @@ export class AppComponent {
     this.gameService.create(newGame).subscribe(game => {
       this.gameInProgress = game;
       this.games.push(game);
+    });
+  }
+
+  pauseGame() {
+    this.gameService.pause(this.gameInProgress.id).subscribe(game => {
+      this.gameInProgress = game;
+    });
+  }
+
+  resumeGame() {
+    this.gameService.resume(this.gameInProgress.id).subscribe(game => {
+      this.gameInProgress = game;
     });
   }
 }

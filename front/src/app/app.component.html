@@ -1,35 +1,42 @@
-<style>
-    table,
-    td {
-        border: 1px solid grey;
-        border-collapse: collapse;
-    }
-
-    td {
-        width: 32px;
-        height: 32px;
-    }
-</style>
-
-Game Status: {{ gameInProgress?.state }}
-<div id="field">
-    <table *ngIf="gameInProgress != null">
-        <tr *ngFor="let row of gameInProgress.board.rows; index as x">
-            <td
-                    *ngFor="let cell of row.cells; index as y"
-                    class="cell"
-                    (click)="open(cell, x, y)"
-                    (contextmenu)="$event.preventDefault();
+<div class="container">
+    <p>Game Status: {{ gameInProgress?.state }}</p>
+    <p> Time: 0</p>
+    <div id="field">
+        <table *ngIf="gameInProgress != null">
+            <tr *ngFor="let row of gameInProgress.board.rows; index as x">
+                <td
+                        *ngFor="let cell of row.cells; index as y"
+                        class="cell"
+                        (click)="open(cell, x, y)"
+                        (contextmenu)="$event.preventDefault();
             rightClick(cell, x, y)"
-            >
-                <div *ngIf="cell.state === 'OPENED' && !cell.mined">{{ cell.surroundingMines }}</div>
-                <div *ngIf="cell.state === 'FLAGGED'"><img src="../assets/flag2.png" alt="F"></div>
-                <div *ngIf="cell.state === 'QUESTION_MARK'"><img src="../assets/question_mark.png" alt="Q"></div>
-                <div *ngIf="cell.mined && cell.state === 'OPENED'"><img src="../assets/mine.png" alt="M"></div>
-            </td>
-        </tr>
-    </table>
-</div>
+                >
+                    <div *ngIf="cell.state === 'OPENED' && !cell.mined">{{ cell.surroundingMines }}</div>
+                    <div *ngIf="cell.state === 'FLAGGED'"><img src="../assets/flag2.png" alt="F"></div>
+                    <div *ngIf="cell.state === 'QUESTION_MARK'"><img src="../assets/question_mark.png" alt="Q"></div>
+                    <div *ngIf="cell.mined && cell.state === 'OPENED'"><img src="../assets/mine.png" alt="M"></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="username">
+        <input [(ngModel)]="userName" type="text" placeholder="username">
+        <button class="btn" (click)="searchGames()">Search</button>
 
-<button (click)="reset()">Restart</button>
-<button (click)="createGame()">Create game</button>
+    </div>
+
+    <div id="games">
+        <ul>
+            <li *ngFor="let game of games" (click)="loadGame(game)">{{ game.id }} {{ game.state }}</li>
+        </ul>
+    </div>
+
+    <div class="buttons">
+        <button class="btn" (click)="reset()">Reset</button>
+        <button class="btn" (click)="createGame()">Create game</button>
+    </div>
+    <div class="buttons">
+        <button class="btn" (click)="pauseGame()">Pause</button>
+        <button class="btn" (click)="resumeGame()">Resume</button>
+    </div>
+</div>

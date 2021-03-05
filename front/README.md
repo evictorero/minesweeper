@@ -1,27 +1,30 @@
-# MineAngular
+# MineSweeper
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.1.
+Front build with Angular and back built with Java 11 with Postgres Database.
+
+## Requirements
+Postgres
+
+Java 11
+
+Node
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. 
 
-## Code scaffolding
+The app will automatically reload if you change any of the source files.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Run back adding profile on VM parameters `-Dspring.profiles.active=local`
+
+Postgres database and user should be added on application.properties
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+mvn clean package
 
-## Running unit tests
+## Swagger
+http://localhost:8080/swagger-ui.html#/
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## Hosted on Heroku
+https://minesweeper-emv.herokuapp.com/

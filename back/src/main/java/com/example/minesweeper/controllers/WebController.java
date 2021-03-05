@@ -1,4 +1,4 @@
-package com.example.minesweeper.controller;
+package com.example.minesweeper.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

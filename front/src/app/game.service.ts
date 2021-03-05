@@ -14,9 +14,9 @@ export class GameService {
 
   constructor(private http: HttpClient) {}
 
-  getAll (): Observable<Array<Game>> {
+  getAllByUserName (userName: string): Observable<Array<Game>> {
     // @ts-ignore
-    return this.http.get<Array<Game>>(this.baseUrl + '/games', {observe: 'response'})
+    return this.http.get<Array<Game>>(this.baseUrl + '/games', {params: {'userName': userName }, observe: 'response'})
       .map(response => {
           return response.body;
         },
@@ -31,11 +31,23 @@ export class GameService {
     return this.http.patch<Game>(this.baseUrl + '/games/' + gameId + '/play', body, {headers}).pipe(catchError(this.handleError));
   }
 
+  pause(gameId: number): Observable<Game> {
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    return this.http.patch<Game>(this.baseUrl + '/games/' + gameId + '/pause',null,  {headers}).pipe(catchError(this.handleError));
+  }
+
+  resume(gameId: number): Observable<Game> {
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    return this.http.patch<Game>(this.baseUrl + '/games/' + gameId + '/resume', null, {headers}).pipe(catchError(this.handleError));
+  }
+
   create(startGameDTO: StartGameDTO ): Observable<Game> {
     const body = JSON.stringify(startGameDTO);
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.http.post<Game>(this.baseUrl + '/games', body, {headers}).pipe(catchError(this.handleError));
   }
+
+
 
   handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {

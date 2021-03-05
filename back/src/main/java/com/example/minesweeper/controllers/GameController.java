@@ -1,11 +1,10 @@
-package com.example.minesweeper.controller;
+package com.example.minesweeper.controllers;
 
 import com.example.minesweeper.model.Game;
 import com.example.minesweeper.model.PlayMoveDTO;
 import com.example.minesweeper.model.StartGameDTO;
 import com.example.minesweeper.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,7 +39,7 @@ public class GameController {
     }
 
     @GetMapping
-    public List<Game> findGames(@RequestParam(required = false) String userName) {
+    public List<Game> findGames(@RequestParam String userName) {
         return this.gameService.findGames(userName);
     }
 
