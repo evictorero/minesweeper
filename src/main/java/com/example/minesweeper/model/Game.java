@@ -8,7 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.time.LocalDateTime;
+import java.time.Duration;
+import java.time.Instant;
 
 @Entity
 @Table(name="game")
@@ -17,7 +18,9 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime startTime;
+    private Instant startTime;
+
+    private long timeElapsed;
 
     private GameState state;
 
@@ -29,6 +32,7 @@ public class Game {
     public Game() {}
 
     public Game(String userName, int rowSize, int columnSize, int minePercentage) {
+        this.startTime = Instant.now();
         this.userName = userName;
         this.board = new Board(rowSize, columnSize, minePercentage);
         this.board.setGame(this);
@@ -59,14 +63,6 @@ public class Game {
         this.board = board;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
     public GameState getState() {
         return state;
     }
@@ -94,5 +90,50 @@ public class Game {
     private void endGame() {
         this.state = GameState.FINISHED;
         // todo stop timer and save time
+    }
+
+    public void pause() {
+        if (GameState.INPROGRESS.equals(this.state)) {
+            this.state = GameState.PAUSED;
+            this.timeElapsed = this.timeElapsed + Duration.between(startTime, Instant.now()).toMillis();
+        }
+    }
+
+    public void resume() {
+        if (GameState.PAUSED.equals(this.state)) {
+            this.state = GameState.INPROGRESS;
+            this.startTime = Instant.now();
+        }
+    }
+
+    public void end() {
+        if (GameState.PAUSED.equals(this.state) || GameState.INPROGRESS.equals(this.state)) {
+            this.state = GameState.FINISHED;
+            this.timeElapsed = this.timeElapsed + Duration.between(startTime, Instant.now()).toMillis();
+        }
+    }
+
+    public String getTimeElapsedFormatted() {
+        return Duration.ofMillis(timeElapsed).toMinutesPart() + " minutes " + Duration.ofMillis(timeElapsed).toSecondsPart() + " seconds.";
+    }
+
+    public Instant getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Instant startTime) {
+        this.startTime = startTime;
+    }
+
+    public long getTimeElapsed() {
+        return timeElapsed;
+    }
+
+    public void setTimeElapsed(long timeElapsed) {
+        this.timeElapsed = timeElapsed;
+    }
+
+    public void setState(GameState state) {
+        this.state = state;
     }
 }

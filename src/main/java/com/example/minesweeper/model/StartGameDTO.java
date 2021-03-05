@@ -10,9 +10,11 @@ public class StartGameDTO {
     private String name;
 
     @NotNull
+    @Range(min=0, max=50)
     private Integer rowSize;
 
     @NotNull
+    @Range(min=0, max=50)
     private Integer columnSize;
 
     @NotNull

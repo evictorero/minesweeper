@@ -15,7 +15,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Duration;
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -149,4 +151,21 @@ class GameServiceTest {
         assertEquals(0L, countOfCellsUnopened);
 
     }
+
+    @Test
+    void pauseGame() throws InterruptedException {
+        var customGame = new Game(USER_NAME, ROW_SIZE, COLUMN_SIZE, 0);
+
+        when(gameRepository.findById(any())).thenReturn(java.util.Optional.of(customGame));
+        when(gameRepository.save(any())).thenReturn(customGame);
+
+        TimeUnit.SECONDS.sleep(2);
+        var updatedGame = this.gameService.pause(1L);
+        var twoSecondsInMilliseconds = Duration.ofSeconds(2).toMillis();
+
+        assertTrue(updatedGame.getTimeElapsed() > twoSecondsInMilliseconds);
+        assertEquals(GameState.PAUSED, updatedGame.getState());
+    }
+
+
 }

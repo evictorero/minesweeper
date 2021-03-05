@@ -26,15 +26,15 @@ public class GameService {
         return this.gameRepository.save(new Game(startGameDTO.getName(), startGameDTO.getRowSize(), startGameDTO.getColumnSize(), startGameDTO.getMinePercentage()));
     }
 
-    public List<Game> findGames() {
+    public List<Game> findGames(String userName) {
+        if (userName != null) {
+            return this.gameRepository.findByUserName(userName);
+        }
         return this.gameRepository.findAll();
     }
 
     public Game play(Long gameId, PlayMoveDTO playMoveDTO) {
-        // todo validate move
-
-        var game = this.gameRepository.findById(gameId).orElseThrow(() -> new NotFoundException("Game not found"));
-        validateMove(game, playMoveDTO);
+        var game = this.findById(gameId);        validateMove(game, playMoveDTO);
 
         game.applyMove(playMoveDTO.getAction(), playMoveDTO.getRow(), playMoveDTO.getColumn());
 
@@ -50,7 +50,25 @@ public class GameService {
         if (game.getState() != GameState.INPROGRESS) {
             throw new BadRequestException("Game is not in progres");
         }
-
     }
 
+    public Game pause(long gameId) {
+        var game = this.findById(gameId);        game.pause();
+        return this.gameRepository.save(game);
+    }
+
+    public Game resume(long gameId) {
+        var game = this.findById(gameId);        game.resume();
+        return this.gameRepository.save(game);
+    }
+
+    public Game end(long gameId) {
+        var game = this.findById(gameId);
+        game.end();
+        return this.gameRepository.save(game);
+    }
+
+    private Game findById(long gameId) {
+        return this.gameRepository.findById(gameId).orElseThrow(() -> new NotFoundException("Game not found"));
+    }
 }

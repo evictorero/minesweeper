@@ -1,6 +1,8 @@
 package com.example.minesweeper.model;
 
 
+import org.hibernate.validator.constraints.Range;
+
 import javax.validation.constraints.NotNull;
 
 public class PlayMoveDTO {
@@ -9,9 +11,11 @@ public class PlayMoveDTO {
     private Action action;
 
     @NotNull
+    @Range(min=0, max=50)
     private Integer row;
 
     @NotNull
+    @Range(min=0, max=50)
     private Integer column;
 
     public PlayMoveDTO(@NotNull Action action, @NotNull Integer row, @NotNull Integer column) {

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -21,7 +22,6 @@ import java.util.List;
 public class GameController {
 
     private GameService gameService;
-
 
     @Autowired
     public GameController(GameService gameService) {
@@ -34,8 +34,8 @@ public class GameController {
     }
 
     @GetMapping
-    public List<Game> findGames() {
-        return this.gameService.findGames();
+    public List<Game> findGames(@RequestParam String userName) {
+        return this.gameService.findGames(userName);
     }
 
     @PatchMapping("{id}/play")
@@ -43,4 +43,20 @@ public class GameController {
                      @RequestBody @Valid PlayMoveDTO playMoveDTO) {
         return this.gameService.play(gameId, playMoveDTO);
     }
+
+    @PatchMapping("{id}/pause")
+    public Game pause(@PathVariable(value = "id") Long gameId) {
+        return this.gameService.pause(gameId);
+    }
+
+    @PatchMapping("{id}/resume")
+    public Game resume(@PathVariable(value = "id") Long gameId) {
+        return this.gameService.resume(gameId);
+    }
+
+    @PatchMapping("{id}/end")
+    public Game end(@PathVariable(value = "id") Long gameId) {
+        return this.gameService.end(gameId);
+    }
+
 }
