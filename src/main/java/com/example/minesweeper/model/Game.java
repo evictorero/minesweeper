@@ -71,7 +71,28 @@ public class Game {
         return state;
     }
 
-    public void setState(GameState state) {
-        this.state = state;
+    public void applyMove(Action action, int row, int column) {
+        var cell = this.getBoard().getRows().get(row).getCells().get(column);
+        cell.applyAction(action);
+        if (Action.OPEN.equals(action) && cell.isMined()) {
+            this.endGame();
+        } else if (Action.OPEN.equals(action) && cell.getSurroundingMines() == 0) {
+            // open recursively
+            this.getBoard().openSurroundingCells(row, column);
+        }
+
+        analizeGameStatus();
+    }
+
+    private void analizeGameStatus() {
+        var remainingCells = this.getBoard().countCellsByState(CellState.UNOPENED);
+        if (remainingCells == 0) {
+            this.endGame();
+        }
+    }
+
+    private void endGame() {
+        this.state = GameState.FINISHED;
+        // todo stop timer and save time
     }
 }

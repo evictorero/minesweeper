@@ -1,12 +1,25 @@
 package com.example.minesweeper.model;
 
-public class StartGameDTO {
-    private String name;
-    private int rowSize;
-    private int columnSize;
-    private int minePercentage;
+import org.hibernate.validator.constraints.Range;
 
-    public StartGameDTO(String name, int rowSize, int columnSize, int minePercentage) {
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+public class StartGameDTO {
+    @NotBlank
+    private String name;
+
+    @NotNull
+    private Integer rowSize;
+
+    @NotNull
+    private Integer columnSize;
+
+    @NotNull
+    @Range(min=0, max=100)
+    private Integer minePercentage;
+
+    public StartGameDTO(@NotBlank String name, @NotNull Integer rowSize, @NotNull Integer columnSize, @NotNull @Range(min = 0, max = 100) Integer minePercentage) {
         this.name = name;
         this.rowSize = rowSize;
         this.columnSize = columnSize;
@@ -21,27 +34,27 @@ public class StartGameDTO {
         this.name = name;
     }
 
-    public int getRowSize() {
+    public Integer getRowSize() {
         return rowSize;
     }
 
-    public void setRowSize(int rowSize) {
+    public void setRowSize(Integer rowSize) {
         this.rowSize = rowSize;
     }
 
-    public int getColumnSize() {
+    public Integer getColumnSize() {
         return columnSize;
     }
 
-    public void setColumnSize(int columnSize) {
+    public void setColumnSize(Integer columnSize) {
         this.columnSize = columnSize;
     }
 
-    public int getMinePercentage() {
+    public Integer getMinePercentage() {
         return minePercentage;
     }
 
-    public void setMinePercentage(int minePercentage) {
+    public void setMinePercentage(Integer minePercentage) {
         this.minePercentage = minePercentage;
     }
 }

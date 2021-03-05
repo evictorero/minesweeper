@@ -13,6 +13,7 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
@@ -141,6 +142,12 @@ public class Board {
         }
     }
 
+    public long countCellsByState(CellState cellState) {
+        return this.getRows().stream().map(MatrixRow::getCells)
+                .flatMap(Collection::stream)
+                .filter(it -> it.getState().equals(cellState))
+                .count();
+    }
 
     public Long getId() {
         return id;

@@ -2,9 +2,9 @@ package com.example.minesweeper.services;
 
 import com.example.minesweeper.exception.BadRequestException;
 import com.example.minesweeper.exception.NotFoundException;
-import com.example.minesweeper.model.Action;
 import com.example.minesweeper.model.Game;
 import com.example.minesweeper.model.GameState;
+import com.example.minesweeper.model.PlayMoveDTO;
 import com.example.minesweeper.model.StartGameDTO;
 import com.example.minesweeper.repositories.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,27 +30,20 @@ public class GameService {
         return this.gameRepository.findAll();
     }
 
-    public Game play(Long gameId, Action action, int row, int column) {
-        var game = this.gameRepository.findById(gameId).orElseThrow(() -> new NotFoundException("Game not found"));
-        validateMove(game, row, column);
+    public Game play(Long gameId, PlayMoveDTO playMoveDTO) {
+        // todo validate move
 
-        applyMove(game, action, row, column);
+        var game = this.gameRepository.findById(gameId).orElseThrow(() -> new NotFoundException("Game not found"));
+        validateMove(game, playMoveDTO);
+
+        game.applyMove(playMoveDTO.getAction(), playMoveDTO.getRow(), playMoveDTO.getColumn());
+
         return this.gameRepository.save(game);
     }
 
-    private void applyMove(Game game, Action action, int row, int column) {
-        var cell = game.getBoard().getRows().get(row).getCells().get(column);
-        cell.applyAction(action);
-        if (Action.OPEN.equals(action) && cell.isMined()) {
-            game.setState(GameState.FINISHED);
-        } else if (Action.OPEN.equals(action) && cell.getSurroundingMines() == 0) {
-            // open recursively
-            game.getBoard().openSurroundingCells(row, column);
-        }
-    }
 
-    private void validateMove(Game game, int row, int column) {
-        if (column >= game.getBoard().getColumnSize() || row >= game.getBoard().getRowSize()) {
+    private void validateMove(Game game, PlayMoveDTO playMoveDTO) {
+        if (playMoveDTO.getColumn() >= game.getBoard().getColumnSize() || playMoveDTO.getColumn() >= game.getBoard().getRowSize()) {
             throw new BadRequestException("Index out of bounds");
         }
 

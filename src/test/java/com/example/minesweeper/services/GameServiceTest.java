@@ -6,6 +6,7 @@ import com.example.minesweeper.model.CellState;
 import com.example.minesweeper.model.Game;
 import com.example.minesweeper.model.GameState;
 import com.example.minesweeper.model.MatrixRow;
+import com.example.minesweeper.model.PlayMoveDTO;
 import com.example.minesweeper.model.StartGameDTO;
 import com.example.minesweeper.repositories.GameRepository;
 import org.junit.jupiter.api.Test;
@@ -68,12 +69,15 @@ class GameServiceTest {
 
     @Test
     void playOpenCell() {
-        var customGame = new Game(USER_NAME, ROW_SIZE, COLUMN_SIZE, 0);
-
+        var customGame = new Game(USER_NAME, ROW_SIZE, COLUMN_SIZE, MINE_PERCENTAGE);
+        var playMoveDTO = new PlayMoveDTO(Action.OPEN, 1, 1);
         when(gameRepository.findById(any())).thenReturn(java.util.Optional.of(customGame));
         when(gameRepository.save(any())).thenReturn(customGame);
 
-        var updatedGame = this.gameService.play(1L, Action.OPEN, 1, 1);
+        // force mined false on this cell only for testing purposes
+        customGame.getBoard().getRows().get(1).getCells().get(1).setMined(false);
+
+        var updatedGame = this.gameService.play(1L, playMoveDTO);
         assertEquals(GameState.INPROGRESS, updatedGame.getState());
         assertEquals(CellState.OPENED, updatedGame.getBoard().getRows().get(1).getCells().get(1).getState());
     }
@@ -81,12 +85,12 @@ class GameServiceTest {
     @Test
     void playOpenCellMined() {
         var customGame = new Game(USER_NAME, ROW_SIZE, COLUMN_SIZE, 100);
+        var playMoveDTO = new PlayMoveDTO(Action.OPEN, 1, 1);
 
         when(gameRepository.findById(any())).thenReturn(java.util.Optional.of(customGame));
         when(gameRepository.save(any())).thenReturn(customGame);
 
-        var updatedGame = this.gameService.play(1L, Action.OPEN, 1, 1);
-
+        var updatedGame = this.gameService.play(1L, playMoveDTO);
         assertEquals(GameState.FINISHED, updatedGame.getState());
         assertEquals(CellState.OPENED, updatedGame.getBoard().getRows().get(1).getCells().get(1).getState());
     }
@@ -94,12 +98,11 @@ class GameServiceTest {
     @Test
     void playFlagCell() {
         var customGame = new Game(USER_NAME, ROW_SIZE, COLUMN_SIZE, 100);
-
+        var playMoveDTO = new PlayMoveDTO(Action.FLAG, 1, 1);
         when(gameRepository.findById(any())).thenReturn(java.util.Optional.of(customGame));
         when(gameRepository.save(any())).thenReturn(customGame);
 
-        var updatedGame = this.gameService.play(1L, Action.FLAG, 1, 1);
-
+        var updatedGame = this.gameService.play(1L, playMoveDTO);
         assertEquals(GameState.INPROGRESS, updatedGame.getState());
         assertEquals(CellState.FLAGGED, updatedGame.getBoard().getRows().get(1).getCells().get(1).getState());
     }
@@ -107,12 +110,11 @@ class GameServiceTest {
     @Test
     void playQuestionMarkCell() {
         var customGame = new Game(USER_NAME, ROW_SIZE, COLUMN_SIZE, 100);
-
+        var playMoveDTO = new PlayMoveDTO(Action.QUESTION_MARK, 1, 1);
         when(gameRepository.findById(any())).thenReturn(java.util.Optional.of(customGame));
         when(gameRepository.save(any())).thenReturn(customGame);
 
-        var updatedGame = this.gameService.play(1L, Action.QUESTION_MARK, 1, 1);
-
+        var updatedGame = this.gameService.play(1L, playMoveDTO);
         assertEquals(GameState.INPROGRESS, updatedGame.getState());
         assertEquals(CellState.QUESTION_MARK, updatedGame.getBoard().getRows().get(1).getCells().get(1).getState());
     }
@@ -120,13 +122,14 @@ class GameServiceTest {
     @Test
     void playClearCell() {
         var customGame = new Game(USER_NAME, ROW_SIZE, COLUMN_SIZE, 100);
+        var playMoveDTO = new PlayMoveDTO(Action.CLEAR, 1, 1);
+
         customGame.getBoard().getRows().get(0).getCells().get(0).setState(CellState.FLAGGED);
 
         when(gameRepository.findById(any())).thenReturn(java.util.Optional.of(customGame));
         when(gameRepository.save(any())).thenReturn(customGame);
 
-        var updatedGame = this.gameService.play(1L, Action.CLEAR, 0, 0);
-
+        var updatedGame = this.gameService.play(1L, playMoveDTO);
         assertEquals(GameState.INPROGRESS, updatedGame.getState());
         assertEquals(CellState.UNOPENED, updatedGame.getBoard().getRows().get(1).getCells().get(1).getState());
     }
@@ -134,15 +137,16 @@ class GameServiceTest {
     @Test
     void playOpenCellWithNoMinesShouldOpenAll() {
         var customGame = new Game(USER_NAME, ROW_SIZE, COLUMN_SIZE, 0);
+        var playMoveDTO = new PlayMoveDTO(Action.OPEN, 0, 0);
 
         when(gameRepository.findById(any())).thenReturn(java.util.Optional.of(customGame));
         when(gameRepository.save(any())).thenReturn(customGame);
 
-        var updatedGame = this.gameService.play(1L, Action.OPEN, 0, 0);
+        var updatedGame = this.gameService.play(1L, playMoveDTO);
+        var countOfCellsUnopened = updatedGame.getBoard().getRows().stream().map(MatrixRow::getCells).flatMap(Collection::stream).filter(it -> it.getState() != CellState.OPENED).count();
 
-        var listOfCellsUnopened = updatedGame.getBoard().getRows().stream().map(MatrixRow::getCells).flatMap(Collection::stream).filter(it -> it.getState() != CellState.OPENED).collect(Collectors.toList());
-
-        assertEquals(0, listOfCellsUnopened.size());
+        assertEquals(GameState.FINISHED, updatedGame.getState());
+        assertEquals(0L, countOfCellsUnopened);
 
     }
 }
