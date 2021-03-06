@@ -146,11 +146,12 @@ public class Board {
         }
     }
 
-    public boolean hasRemainingCellsUnopened() {
+    public boolean allRemainingCellsHasAMine() {
         return this.getRows().stream()
                 .map(MatrixRow::getCells)
                 .flatMap(Collection::stream)
-                .anyMatch(it -> it.getState().isUnopenedState());
+                .filter(it -> it.getState().isUnopenedState())
+                .allMatch(Cell::isMined);
     }
 
     public Long getId() {

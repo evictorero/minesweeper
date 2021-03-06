@@ -1,16 +1,16 @@
 # MineSweeper
 
-Front build with Angular and back built with Java 11 with Postgres Database.
+Frontend built with Angular and backend built with Java 11 and Postgres DB.
 
 ## Requirements
-###Postgres
+### Postgres
 Create database and user with script provided in folder scripts or change configuration from application.properties
 
 `psql -f scripts/create-database.sql`
 
-###Java 11
+### Java 11
 
-###Node 12
+### Node 12
 
 
 ## Development server

@@ -36,6 +36,12 @@ export enum GameState {
   PAUSED = 'PAUSED',
 }
 
+export enum GameResult {
+  WIN = 'WIN',
+  LOSE = 'LOSE',
+  INPROGRESS = 'INPROGRESS',
+}
+
 export enum Action {
   OPEN = 'OPEN',
   FLAG = 'FLAG',
@@ -60,5 +66,7 @@ export class Game {
   board: Board;
   userName: string;
   timeElapsed: number;
+  timeElapsedFormatted: string;
   state: GameState;
+  result: GameResult;
 }

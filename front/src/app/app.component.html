@@ -1,12 +1,11 @@
 <div class="container" *ngIf="!currentUserName" id="search">
     <p>Please type your name to start playing MineSweeper</p>
-    <input [(ngModel)]="userName" type="text" placeholder="name" required>
+    <input [(ngModel)]="userName" type="text" placeholder="name">
     <button class="btn" (click)="startGame()">Start</button>
 </div>
 <div id="main" *ngIf="currentUserName" class="container">
     <p>User: {{ currentUserName }}</p>
     <p>Game Status: {{ gameInProgress?.state }}</p>
-    <p>Time: 0</p>
     <p *ngIf="!this.gameInProgress">Start creating a new game or picking one from your list</p>
     <div id="field">
         <table *ngIf="gameInProgress != null">
@@ -15,8 +14,7 @@
                         *ngFor="let cell of row.cells; index as y"
                         class="cell"
                         (click)="open(cell, x, y)"
-                        (contextmenu)="$event.preventDefault();
-            rightClick(cell, x, y)"
+                        (contextmenu)="$event.preventDefault(); rightClick(cell, x, y)"
                 >
                     <div class="cell" *ngIf="cell.state === 'OPENED' && !cell.mined">{{ cell.surroundingMines }}</div>
                     <div class="cell" *ngIf="cell.state === 'FLAGGED'"><img src="../assets/flag.png" alt="F"></div>
@@ -31,21 +29,21 @@
 
     <ul>
         <li class="link" *ngFor="let game of games" (click)="loadGame(game)">
-            Game:{{ game.id }} - {{ game.state }} - {{ duration(game.timeElapsed) }}
+            Game:{{ game.id }} - {{ game.state }} {{ game.result}} - {{ game.timeElapsedFormatted }}
         </li>
     </ul>
 
     <div class="create-form">
         <label class="label">Rows
-        <input [(ngModel)]="startGameDTO.rowSize" type="number">
+        <input [(ngModel)]="startGameDTO.rowSize" type="number" min="1" max="50">
         </label>
 
         <label class="label">Columns
-        <input [(ngModel)]="startGameDTO.columnSize" type="number">
+        <input [(ngModel)]="startGameDTO.columnSize" type="number" min="1" max="50">
         </label>
 
         <label class="label">% Mines
-        <input [(ngModel)]="startGameDTO.minePercentage" type="number">
+        <input [(ngModel)]="startGameDTO.minePercentage" type="number" min="1" max="100">
         </label>
 
         <button class="btn" (click)="createGame()">New game</button>
@@ -59,4 +57,9 @@
     <div class="buttons">
         <button class="btn" (click)="reset()">Change user</button>
     </div>
+
+<!--    <div class="buttons">-->
+<!--        <button class="btn" (click)="startConfetti()">Confetti</button>-->
+<!--        <button class="btn" (click)="stopConfetti()">Stop</button>-->
+<!--    </div>-->
 </div>

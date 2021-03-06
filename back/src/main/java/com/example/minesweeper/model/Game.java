@@ -32,6 +32,8 @@ public class Game {
 
     private String userName;
 
+    private GameResult result;
+
     @OneToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "game")
     private Board board;
 
@@ -43,6 +45,7 @@ public class Game {
         this.board = new Board(startGameDTO.getRowSize(), startGameDTO.getColumnSize(), startGameDTO.getMinePercentage());
         this.board.setGame(this);
         this.state = GameState.INPROGRESS;
+        this.result = GameResult.INPROGRESS;
     }
 
     public Long getId() {
@@ -76,23 +79,32 @@ public class Game {
     public void applyMove(Action action, int row, int column) {
         var cell = this.getBoard().getRows().get(row).getCells().get(column);
         cell.applyAction(action);
-        if (Action.OPEN.equals(action) && cell.isMined()) {
-            logger.info("game lost");
-            this.endGame();
-        } else if (Action.OPEN.equals(action) && cell.getSurroundingMines() == 0) {
-            logger.info("opening adjacent cells with 0 mines");
-            // open recursively
-            this.getBoard().openSurroundingCells(row, column);
+        if (Action.OPEN.equals(action)) {
+            if (cell.isMined()) {
+                logger.info("game lost");
+                this.lostGame();
+            } else if (cell.getSurroundingMines() == 0) {
+                logger.info("opening adjacent cells with 0 mines");
+                // open recursively
+                this.getBoard().openSurroundingCells(row, column);
+            }
         }
         analizeGameStatus();
     }
 
     private void analizeGameStatus() {
-        if (!this.getBoard().hasRemainingCellsUnopened()) {
-            this.endGame();
+        if (this.getBoard().allRemainingCellsHasAMine()) {
+            this.winGame();
         }
     }
 
+    private void winGame() {
+        this.endGame(GameResult.WIN);
+    }
+
+    private void lostGame() {
+        this.endGame(GameResult.LOSE);
+    }
     public void pause() {
         if (GameState.INPROGRESS.equals(this.state)) {
             logger.info("pausing gameId: {}", this.id);
@@ -109,18 +121,21 @@ public class Game {
         }
     }
 
-    public void endGame() {
+    public void endGame(GameResult gameResult) {
         logger.info("finishing gameId: {}", this.id);
 
         if (GameState.INPROGRESS.equals(this.state)) {
             logger.info("calculating timeElapsed for gameId: {}", this.id);
             this.timeElapsed = this.timeElapsed + Duration.between(startTime, Instant.now()).toMillis();
         }
+
         this.state = GameState.FINISHED;
+        this.result = gameResult;
     }
 
     public String getTimeElapsedFormatted() {
-        return Duration.ofMillis(timeElapsed).toMinutesPart() + " minutes " + Duration.ofMillis(timeElapsed).toSecondsPart() + " seconds.";
+        var timeElapsedCalculated = this.getTimeElapsed();
+        return Duration.ofMillis(timeElapsedCalculated).toHoursPart() + ":" + Duration.ofMillis(timeElapsedCalculated).toMinutesPart() + ":" + Duration.ofMillis(timeElapsedCalculated).toSecondsPart();
     }
 
     public void initialize() {
@@ -148,5 +163,13 @@ public class Game {
 
     public void setState(GameState state) {
         this.state = state;
+    }
+
+    public GameResult getResult() {
+        return result;
+    }
+
+    public void setResult(GameResult result) {
+        this.result = result;
     }
 }

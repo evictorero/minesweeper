@@ -1,13 +1,16 @@
 import { Component } from '@angular/core';
 import { GameService } from './game.service';
-import { Action, Cell, CellState, Game, PlayMoveDTO, StartGameDTO } from './entities';
+import { Action, Cell, CellState, Game, GameResult, GameState, PlayMoveDTO, StartGameDTO } from './entities';
 import { isNotNullOrUndefined } from 'codelyzer/util/isNotNullOrUndefined';
+
+declare function confetti(): any;
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
 export class AppComponent {
 
   title = 'minesweeper';
@@ -28,12 +31,17 @@ export class AppComponent {
     this.games = [];
     this.userName = null;
     this.currentUserName = null;
+    this.stopConfetti();
   }
 
   open(cell, row, column) {
     const playMoveDTO = new PlayMoveDTO(Action.OPEN, row, column);
     this.gameService.play(this.gameInProgress.id, playMoveDTO).subscribe(game => {
       this.gameInProgress = game;
+      if (game.state == GameState.FINISHED && game.result == GameResult.WIN) {
+        this.startConfetti();
+      }
+      this.updateGameList(game);
     });
   }
 
@@ -53,6 +61,7 @@ export class AppComponent {
     const playMoveDTO = new PlayMoveDTO(nextAction, row, column);
     this.gameService.play(this.gameInProgress.id, playMoveDTO).subscribe(game => {
       this.gameInProgress = game;
+      this.updateGameList(game);
     });
   }
 
@@ -71,6 +80,7 @@ export class AppComponent {
 
   createGame() {
     this.startGameDTO.name = this.currentUserName;
+    this.stopConfetti();
 
     this.gameService.create(this.startGameDTO).subscribe(game => {
       this.gameInProgress = game;
@@ -97,19 +107,13 @@ export class AppComponent {
     this.games.splice(index, 1, game);
   }
 
+  startConfetti() {
+    // @ts-ignore
+    confetti.start();
+  }
 
-  duration(elapsedTime: number) {
-    const seconds = Math.floor((elapsedTime / 1000) % 60);
-    const minutes = Math.floor((elapsedTime / 1000 / 60) % 60);
-    const hours = Math.floor((elapsedTime  / 1000 / 3600 ) % 24)
-
-    const formatted = [
-      hours.toString(),
-      minutes.toString(),
-      seconds.toString(),
-    ].join(':');
-
-    console.log('duration ' + formatted);
-    return formatted;
+  stopConfetti() {
+    // @ts-ignore
+    confetti.stop();
   }
 }

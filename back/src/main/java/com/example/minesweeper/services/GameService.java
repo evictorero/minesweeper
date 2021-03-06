@@ -4,6 +4,7 @@ import com.example.minesweeper.exception.BadRequestException;
 import com.example.minesweeper.exception.NotFoundException;
 import com.example.minesweeper.model.Board;
 import com.example.minesweeper.model.Game;
+import com.example.minesweeper.model.GameResult;
 import com.example.minesweeper.model.GameState;
 import com.example.minesweeper.model.PlayMoveDTO;
 import com.example.minesweeper.model.StartGameDTO;
@@ -74,7 +75,7 @@ public class GameService {
 
     public Game end(long gameId) {
         var game = this.findById(gameId);
-        game.endGame();
+        game.endGame(GameResult.LOSE);
         return this.gameRepository.save(game);
     }
 
