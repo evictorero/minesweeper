@@ -62,9 +62,13 @@ button {
 .create-form {
     display: flex;
     justify-content: center;
-    flex-direction: column;
-    width: 50%;
+    flex-direction: row;
     padding: 5px;
+    border: 2px inset #a29090;
+}
+
+.create-form input {
+    width: 4em;
 }
 
 .cell {
@@ -81,16 +85,16 @@ button {
     justify-content: center;
 }
 
-#search ul {
+#main ul {
     padding-inline-start: 1em;
 }
 
-#search ul li.link {
+#main ul li.link {
     color: blue;
     text-decoration: none;
     cursor: pointer;
 }
-#search ul li.link:hover {
+#main ul li.link:hover {
     color: #00f;
     text-decoration: underline;
 }

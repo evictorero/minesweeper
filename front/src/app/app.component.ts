@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { GameService } from './game.service';
 import { Action, Cell, CellState, Game, PlayMoveDTO, StartGameDTO } from './entities';
 import { isNotNullOrUndefined } from 'codelyzer/util/isNotNullOrUndefined';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ export class AppComponent {
   games: Game[] = [];
   gameInProgress: Game;
   userName: string;
+  currentUserName: string;
 
   startGameDTO: StartGameDTO = new StartGameDTO();
 
@@ -35,6 +37,7 @@ export class AppComponent {
     this.gameInProgress = null;
     this.games = [];
     this.userName = null;
+    this.currentUserName = null;
   }
 
   open(cell, row, column) {
@@ -68,16 +71,18 @@ export class AppComponent {
     this.gameInProgress = game;
   }
 
-  searchGames() {
-    if (isNotNullOrUndefined(this.userName)) {
-
-    this.gameService.getAllByUserName(this.userName).subscribe(games => {
-      this.games = games;
-    })
+  startGame() {
+    this.currentUserName = this.userName;
+    if (isNotNullOrUndefined(this.currentUserName)) {
+      this.gameService.getAllByUserName(this.userName).subscribe(games => {
+        this.games = games;
+      })
     }
   }
 
   createGame() {
+    this.startGameDTO.name = this.currentUserName;
+
     this.gameService.create(this.startGameDTO).subscribe(game => {
       this.gameInProgress = game;
       this.games.push(game);

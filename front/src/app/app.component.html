@@ -1,6 +1,12 @@
-<div class="container">
+<div class="container" *ngIf="!currentUserName" id="search">
+    <input [(ngModel)]="userName" type="text" placeholder="username">
+    <button class="btn" (click)="startGame()">Start</button>
+</div>
+<div id="main" *ngIf="currentUserName" class="container">
+    <p>User: {{ currentUserName }}</p>
     <p>Game Status: {{ gameInProgress?.state }}</p>
-    <p> Time: 0</p>
+    <p>Time: 0</p>
+    <p *ngIf="!this.gameInProgress">Start creating a new game or picking one from your list</p>
     <div id="field">
         <table *ngIf="gameInProgress != null">
             <tr *ngFor="let row of gameInProgress.board.rows; index as x">
@@ -21,37 +27,33 @@
             </tr>
         </table>
     </div>
-    <div id="search">
-        <input [(ngModel)]="userName" type="text" placeholder="username">
-        <button class="btn" (click)="searchGames()">Search</button>
-        <ul>
-            <li class="link" *ngFor="let game of games" (click)="loadGame(game)">Game:{{ game.id }} - {{ game.state }}</li>
-        </ul>
 
-    </div>
+    <ul>
+        <li class="link" *ngFor="let game of games" (click)="loadGame(game)">Game:{{ game.id }} - {{ game.state }}</li>
+    </ul>
 
     <div class="create-form">
-        <label class="label">Name:</label>
-        <input [(ngModel)]="startGameDTO.name" type="text">
-
-        <label class="label">Rows:</label>
+        <label class="label">Rows
         <input [(ngModel)]="startGameDTO.rowSize" type="number">
+        </label>
 
-        <label class="label">Columns:</label>
+        <label class="label">Columns
         <input [(ngModel)]="startGameDTO.columnSize" type="number">
+        </label>
 
-        <label class="label">Mines Percentage:</label>
+        <label class="label">% Mines
         <input [(ngModel)]="startGameDTO.minePercentage" type="number">
+        </label>
 
-        <button class="btn" (click)="createGame()">Create game</button>
+        <button class="btn" (click)="createGame()">New game</button>
     </div>
 
 
-    <!--    <div class="buttons">-->
-    <!--        <button class="btn" (click)="reset()">Reset</button>-->
-    <!--    </div>-->
     <div class="buttons">
         <button class="btn" (click)="pauseGame()">Pause</button>
         <button class="btn" (click)="resumeGame()">Resume</button>
+    </div>
+    <div class="buttons">
+        <button class="btn" (click)="reset()">Change user</button>
     </div>
 </div>
