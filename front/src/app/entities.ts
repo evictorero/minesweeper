@@ -3,13 +3,6 @@ export class StartGameDTO {
   rowSize: number;
   columnSize: number;
   minePercentage: number;
-
-  constructor(name, rowSize, columnSize, minePercentage) {
-    this.name = name;
-    this.rowSize = rowSize;
-    this.columnSize = columnSize;
-    this.minePercentage = minePercentage;
-  }
 }
 
 export class MatrixRow {

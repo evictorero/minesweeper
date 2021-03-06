@@ -49,7 +49,7 @@ public class GameService {
 
 
     private void validateMove(Game game, PlayMoveDTO playMoveDTO) {
-        if (playMoveDTO.getColumn() >= game.getBoard().getColumnSize() || playMoveDTO.getColumn() >= game.getBoard().getRowSize()) {
+        if (playMoveDTO.getColumn() >= game.getBoard().getColumnSize() || playMoveDTO.getRow() >= game.getBoard().getRowSize()) {
             throw new BadRequestException("Index out of bounds");
         }
 

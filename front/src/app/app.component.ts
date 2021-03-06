@@ -17,6 +17,9 @@ export class AppComponent {
   gameInProgress: Game;
   userName: string;
 
+  startGameDTO: StartGameDTO = new StartGameDTO();
+
+
   constructor(private gameService: GameService) {
     // this.gameService.getAllByUserName().subscribe(games => {
     //   this.games = games;
@@ -75,8 +78,7 @@ export class AppComponent {
   }
 
   createGame() {
-    const newGame = new StartGameDTO('eze', 3, 3, 10);
-    this.gameService.create(newGame).subscribe(game => {
+    this.gameService.create(this.startGameDTO).subscribe(game => {
       this.gameInProgress = game;
       this.games.push(game);
     });

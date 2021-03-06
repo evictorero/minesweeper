@@ -31,9 +31,25 @@
         </ul>
     </div>
 
+    <div class="create-form">
+        <label class="label" >Name:</label>
+         <input [(ngModel)]="startGameDTO.name" type="text">
+
+        <label class="label" >Rows:</label>
+        <input [(ngModel)]="startGameDTO.rowSize" type="number">
+
+        <label class="label" >Columns:</label>
+        <input [(ngModel)]="startGameDTO.columnSize" type="number">
+
+        <label class="label" >Mines Percentage:</label>
+        <input [(ngModel)]="startGameDTO.minePercentage" type="number">
+
+        <button class="btn" (click)="createGame()">Create game</button>
+    </div>
+
+
     <div class="buttons">
         <button class="btn" (click)="reset()">Reset</button>
-        <button class="btn" (click)="createGame()">Create game</button>
     </div>
     <div class="buttons">
         <button class="btn" (click)="pauseGame()">Pause</button>
