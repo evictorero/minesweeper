@@ -9,6 +9,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build:prod": "npm run build -- --configuration production --aot",
+    "build:local": "npm run build -- --aot",
     "install-and-compile-prod": "npm install --production=false && npm run build:prod"
   },
   "private": true,

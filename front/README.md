@@ -3,28 +3,44 @@
 Front build with Angular and back built with Java 11 with Postgres Database.
 
 ## Requirements
-Postgres
+###Postgres
+Create database and user with script provided in folder scripts or change configuration from application.properties
 
-Java 11
+`psql -f scripts/create-database.sql`
 
-Node
+###Java 11
+
+###Node 12
+
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. 
+### Front
+Run `make run_frontend_dev` for a front dev server. Navigate to `http://localhost:4200/`. 
 
 The app will automatically reload if you change any of the source files.
 
-Run back adding profile on VM parameters `-Dspring.profiles.active=local`
+### Back
 
-Postgres database and user should be added on application.properties
+`make run_backend_dev` Or run from IDE adding profile local on VM parameters `-Dspring.profiles.active=local`
+
 
 ## Build
 
-mvn clean package
+`make build`
+
+## Build and run local fron Jar
+
+`make build`
+
+`make run`
 
 ## Swagger
 http://localhost:8080/swagger-ui.html#/
 
 ## Hosted on Heroku
 https://minesweeper-emv.herokuapp.com/
+
+## Docker
+
+Run app from pre compiled JAR with docker executing `docker-compose up` from docker folder
