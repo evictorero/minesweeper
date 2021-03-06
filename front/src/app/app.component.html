@@ -11,46 +11,45 @@
                         (contextmenu)="$event.preventDefault();
             rightClick(cell, x, y)"
                 >
-                    <div *ngIf="cell.state === 'OPENED' && !cell.mined">{{ cell.surroundingMines }}</div>
-                    <div *ngIf="cell.state === 'FLAGGED'"><img src="../assets/flag2.png" alt="F"></div>
-                    <div *ngIf="cell.state === 'QUESTION_MARK'"><img src="../assets/question_mark.png" alt="Q"></div>
-                    <div *ngIf="cell.mined && cell.state === 'OPENED'"><img src="../assets/mine.png" alt="M"></div>
+                    <div class="cell" *ngIf="cell.state === 'OPENED' && !cell.mined">{{ cell.surroundingMines }}</div>
+                    <div class="cell" *ngIf="cell.state === 'FLAGGED'"><img src="../assets/flag.png" alt="F"></div>
+                    <div class="cell" *ngIf="cell.state === 'QUESTION_MARK'"><img src="../assets/question_mark2.png"
+                                                                                  alt="Q"></div>
+                    <div class="cell" *ngIf="cell.mined && cell.state === 'OPENED'"><img src="../assets/mine.png"
+                                                                                         alt="M"></div>
                 </td>
             </tr>
         </table>
     </div>
-    <div id="username">
+    <div id="search">
         <input [(ngModel)]="userName" type="text" placeholder="username">
         <button class="btn" (click)="searchGames()">Search</button>
-
-    </div>
-
-    <div id="games">
         <ul>
-            <li *ngFor="let game of games" (click)="loadGame(game)">{{ game.id }} {{ game.state }}</li>
+            <li class="link" *ngFor="let game of games" (click)="loadGame(game)">Game:{{ game.id }} - {{ game.state }}</li>
         </ul>
+
     </div>
 
     <div class="create-form">
-        <label class="label" >Name:</label>
-         <input [(ngModel)]="startGameDTO.name" type="text">
+        <label class="label">Name:</label>
+        <input [(ngModel)]="startGameDTO.name" type="text">
 
-        <label class="label" >Rows:</label>
+        <label class="label">Rows:</label>
         <input [(ngModel)]="startGameDTO.rowSize" type="number">
 
-        <label class="label" >Columns:</label>
+        <label class="label">Columns:</label>
         <input [(ngModel)]="startGameDTO.columnSize" type="number">
 
-        <label class="label" >Mines Percentage:</label>
+        <label class="label">Mines Percentage:</label>
         <input [(ngModel)]="startGameDTO.minePercentage" type="number">
 
         <button class="btn" (click)="createGame()">Create game</button>
     </div>
 
 
-    <div class="buttons">
-        <button class="btn" (click)="reset()">Reset</button>
-    </div>
+    <!--    <div class="buttons">-->
+    <!--        <button class="btn" (click)="reset()">Reset</button>-->
+    <!--    </div>-->
     <div class="buttons">
         <button class="btn" (click)="pauseGame()">Pause</button>
         <button class="btn" (click)="resumeGame()">Resume</button>
