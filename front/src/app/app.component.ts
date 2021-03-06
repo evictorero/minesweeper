@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { GameService } from './game.service';
 import { Action, Cell, CellState, Game, PlayMoveDTO, StartGameDTO } from './entities';
 import { isNotNullOrUndefined } from 'codelyzer/util/isNotNullOrUndefined';
-import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-root',
@@ -22,16 +21,7 @@ export class AppComponent {
   startGameDTO: StartGameDTO = new StartGameDTO();
 
 
-  constructor(private gameService: GameService) {
-    // this.gameService.getAllByUserName().subscribe(games => {
-    //   this.games = games;
-    //   if (games.length > 0) {
-    //     this.gameInProgress = this.games[0];
-    //   }
-    //   console.log(this.games);
-    // })
-    // this.reset();
-  }
+  constructor(private gameService: GameService) { }
 
   reset() {
     this.gameInProgress = null;
@@ -44,7 +34,6 @@ export class AppComponent {
     const playMoveDTO = new PlayMoveDTO(Action.OPEN, row, column);
     this.gameService.play(this.gameInProgress.id, playMoveDTO).subscribe(game => {
       this.gameInProgress = game;
-      // cell.state = CellState.OPENED;
     });
   }
 
@@ -92,12 +81,35 @@ export class AppComponent {
   pauseGame() {
     this.gameService.pause(this.gameInProgress.id).subscribe(game => {
       this.gameInProgress = game;
+      this.updateGameList(game);
     });
   }
 
   resumeGame() {
     this.gameService.resume(this.gameInProgress.id).subscribe(game => {
       this.gameInProgress = game;
+      this.updateGameList(game);
     });
+  }
+
+  private updateGameList(game: Game) {
+    const index = this.games.findIndex(g => g.id == game.id);
+    this.games.splice(index, 1, game);
+  }
+
+
+  duration(elapsedTime: number) {
+    const seconds = Math.floor((elapsedTime / 1000) % 60);
+    const minutes = Math.floor((elapsedTime / 1000 / 60) % 60);
+    const hours = Math.floor((elapsedTime  / 1000 / 3600 ) % 24)
+
+    const formatted = [
+      hours.toString(),
+      minutes.toString(),
+      seconds.toString(),
+    ].join(':');
+
+    console.log('duration ' + formatted);
+    return formatted;
   }
 }

@@ -59,11 +59,9 @@ public class Board {
         this.rowSize = rowSize;
         this.columnSize = columnSize;
         this.minePercentage = minePercentage;
-
-        initialize();
     }
 
-    private void initialize() {
+    public void initialize() {
         addMines();
         calculateAdjacentMines();
     }
@@ -146,13 +144,6 @@ public class Board {
                 mineQuantity--;
             }
         }
-    }
-
-    public long countCellsByState(CellState cellState) {
-        return this.getRows().stream().map(MatrixRow::getCells)
-                .flatMap(Collection::stream)
-                .filter(it -> it.getState().equals(cellState))
-                .count();
     }
 
     public boolean hasRemainingCellsUnopened() {

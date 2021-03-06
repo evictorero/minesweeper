@@ -85,6 +85,10 @@ button {
     justify-content: center;
 }
 
+#search .btn {
+    margin: 10px;
+}
+
 #main ul {
     padding-inline-start: 1em;
 }

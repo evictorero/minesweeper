@@ -43,10 +43,11 @@ class GameServiceTest {
 
     @Test
     void createAndInitializeGame() {
-        var customGame = new Game(USER_NAME, ROW_SIZE, COLUMN_SIZE, MINE_PERCENTAGE);
-        when(gameRepository.save(any())).thenReturn(customGame);
-
         var startGameDTO = new StartGameDTO(USER_NAME, ROW_SIZE, COLUMN_SIZE, MINE_PERCENTAGE);
+        var customGame = new Game(startGameDTO);
+        customGame.initialize();
+
+        when(gameRepository.save(any())).thenReturn(customGame);
 
         var game = this.gameService.createGame(startGameDTO);
         var boardCells = game.getBoard().getRows().stream().map(MatrixRow::getCells).flatMap(Collection::stream).collect(Collectors.toList());
@@ -71,7 +72,10 @@ class GameServiceTest {
 
     @Test
     void playOpenCell() {
-        var customGame = new Game(USER_NAME, ROW_SIZE, COLUMN_SIZE, MINE_PERCENTAGE);
+        var startGameDTO = new StartGameDTO(USER_NAME, ROW_SIZE, COLUMN_SIZE, MINE_PERCENTAGE);
+        var customGame = new Game(startGameDTO);
+        customGame.initialize();
+
         var playMoveDTO = new PlayMoveDTO(Action.OPEN, 1, 1);
         when(gameRepository.findById(any())).thenReturn(java.util.Optional.of(customGame));
         when(gameRepository.save(any())).thenReturn(customGame);
@@ -86,7 +90,10 @@ class GameServiceTest {
 
     @Test
     void playOpenCellMined() {
-        var customGame = new Game(USER_NAME, ROW_SIZE, COLUMN_SIZE, 100);
+        var startGameDTO = new StartGameDTO(USER_NAME, ROW_SIZE, COLUMN_SIZE, MINE_PERCENTAGE);
+        var customGame = new Game(startGameDTO);
+        customGame.initialize();
+
         var playMoveDTO = new PlayMoveDTO(Action.OPEN, 1, 1);
 
         when(gameRepository.findById(any())).thenReturn(java.util.Optional.of(customGame));
@@ -99,7 +106,10 @@ class GameServiceTest {
 
     @Test
     void playFlagCell() {
-        var customGame = new Game(USER_NAME, ROW_SIZE, COLUMN_SIZE, 100);
+        var startGameDTO = new StartGameDTO(USER_NAME, ROW_SIZE, COLUMN_SIZE, 100);
+        var customGame = new Game(startGameDTO);
+        customGame.initialize();
+
         var playMoveDTO = new PlayMoveDTO(Action.FLAG, 1, 1);
         when(gameRepository.findById(any())).thenReturn(java.util.Optional.of(customGame));
         when(gameRepository.save(any())).thenReturn(customGame);
@@ -111,7 +121,10 @@ class GameServiceTest {
 
     @Test
     void playQuestionMarkCell() {
-        var customGame = new Game(USER_NAME, ROW_SIZE, COLUMN_SIZE, 100);
+        var startGameDTO = new StartGameDTO(USER_NAME, ROW_SIZE, COLUMN_SIZE, 100);
+        var customGame = new Game(startGameDTO);
+        customGame.initialize();
+
         var playMoveDTO = new PlayMoveDTO(Action.QUESTION_MARK, 1, 1);
         when(gameRepository.findById(any())).thenReturn(java.util.Optional.of(customGame));
         when(gameRepository.save(any())).thenReturn(customGame);
@@ -123,7 +136,10 @@ class GameServiceTest {
 
     @Test
     void playClearCell() {
-        var customGame = new Game(USER_NAME, ROW_SIZE, COLUMN_SIZE, 100);
+        var startGameDTO = new StartGameDTO(USER_NAME, ROW_SIZE, COLUMN_SIZE, 100);
+        var customGame = new Game(startGameDTO);
+        customGame.initialize();
+
         var playMoveDTO = new PlayMoveDTO(Action.CLEAR, 1, 1);
 
         customGame.getBoard().getRows().get(0).getCells().get(0).setState(CellState.FLAGGED);
@@ -138,7 +154,10 @@ class GameServiceTest {
 
     @Test
     void playOpenCellWithNoMinesShouldOpenAll() {
-        var customGame = new Game(USER_NAME, ROW_SIZE, COLUMN_SIZE, 0);
+        var startGameDTO = new StartGameDTO(USER_NAME, ROW_SIZE, COLUMN_SIZE, 0);
+        var customGame = new Game(startGameDTO);
+        customGame.initialize();
+
         var playMoveDTO = new PlayMoveDTO(Action.OPEN, 0, 0);
 
         when(gameRepository.findById(any())).thenReturn(java.util.Optional.of(customGame));
@@ -154,7 +173,9 @@ class GameServiceTest {
 
     @Test
     void pauseGame() throws InterruptedException {
-        var customGame = new Game(USER_NAME, ROW_SIZE, COLUMN_SIZE, 0);
+        var startGameDTO = new StartGameDTO(USER_NAME, ROW_SIZE, COLUMN_SIZE, 0);
+        var customGame = new Game(startGameDTO);
+        customGame.initialize();
 
         when(gameRepository.findById(any())).thenReturn(java.util.Optional.of(customGame));
         when(gameRepository.save(any())).thenReturn(customGame);

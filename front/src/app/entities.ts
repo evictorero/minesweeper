@@ -9,17 +9,6 @@ export class MatrixRow {
   cells: Cell[];
 }
 
-// export class Board {
-//   constructor(size: number, mines: number) {
-//     for (let y = 0; y < size; y++) {
-//       this.cells[y] = [];
-//       for (let x = 0; x < size; x++) {
-//         this.cells[y][x] = new Cell(y, x);
-//       }
-//     }
-//   }
-//   cells: Cell[][] = [];
-// }
 
 export class Board {
   rowSize: number;
@@ -32,8 +21,6 @@ export class Cell {
   state: CellState;
   mined: boolean;
   surroundingMines: number;
-  // constructor(public row: number, public column: number) {}
-
 }
 
 export enum CellState {
@@ -72,5 +59,6 @@ export class Game {
   id: number;
   board: Board;
   userName: string;
+  timeElapsed: number;
   state: GameState;
 }

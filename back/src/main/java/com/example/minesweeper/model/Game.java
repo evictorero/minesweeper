@@ -37,10 +37,10 @@ public class Game {
 
     public Game() {}
 
-    public Game(String userName, int rowSize, int columnSize, int minePercentage) {
+    public Game(StartGameDTO startGameDTO) {
         this.startTime = Instant.now();
-        this.userName = userName;
-        this.board = new Board(rowSize, columnSize, minePercentage);
+        this.userName = startGameDTO.getName();
+        this.board = new Board(startGameDTO.getRowSize(), startGameDTO.getColumnSize(), startGameDTO.getMinePercentage());
         this.board.setGame(this);
         this.state = GameState.INPROGRESS;
     }
@@ -84,7 +84,6 @@ public class Game {
             // open recursively
             this.getBoard().openSurroundingCells(row, column);
         }
-
         analizeGameStatus();
     }
 
@@ -124,6 +123,10 @@ public class Game {
         return Duration.ofMillis(timeElapsed).toMinutesPart() + " minutes " + Duration.ofMillis(timeElapsed).toSecondsPart() + " seconds.";
     }
 
+    public void initialize() {
+        this.board.initialize();
+    }
+
     public Instant getStartTime() {
         return startTime;
     }
@@ -133,6 +136,9 @@ public class Game {
     }
 
     public long getTimeElapsed() {
+        if (this.state == GameState.INPROGRESS) {
+            return timeElapsed + Duration.between(startTime, Instant.now()).toMillis();
+        }
         return timeElapsed;
     }
 

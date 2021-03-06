@@ -2,6 +2,7 @@ package com.example.minesweeper.services;
 
 import com.example.minesweeper.exception.BadRequestException;
 import com.example.minesweeper.exception.NotFoundException;
+import com.example.minesweeper.model.Board;
 import com.example.minesweeper.model.Game;
 import com.example.minesweeper.model.GameState;
 import com.example.minesweeper.model.PlayMoveDTO;
@@ -27,7 +28,9 @@ public class GameService {
     }
 
     public Game createGame(StartGameDTO startGameDTO) {
-        return this.gameRepository.save(new Game(startGameDTO.getName(), startGameDTO.getRowSize(), startGameDTO.getColumnSize(), startGameDTO.getMinePercentage()));
+        var game = new Game(startGameDTO);
+        game.initialize();
+        return this.gameRepository.save(game);
     }
 
     public List<Game> findGames(String userName) {

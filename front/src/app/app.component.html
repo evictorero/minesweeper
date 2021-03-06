@@ -1,5 +1,6 @@
 <div class="container" *ngIf="!currentUserName" id="search">
-    <input [(ngModel)]="userName" type="text" placeholder="username">
+    <p>Please type your name to start playing MineSweeper</p>
+    <input [(ngModel)]="userName" type="text" placeholder="name" required>
     <button class="btn" (click)="startGame()">Start</button>
 </div>
 <div id="main" *ngIf="currentUserName" class="container">
@@ -29,7 +30,9 @@
     </div>
 
     <ul>
-        <li class="link" *ngFor="let game of games" (click)="loadGame(game)">Game:{{ game.id }} - {{ game.state }}</li>
+        <li class="link" *ngFor="let game of games" (click)="loadGame(game)">
+            Game:{{ game.id }} - {{ game.state }} - {{ duration(game.timeElapsed) }}
+        </li>
     </ul>
 
     <div class="create-form">
