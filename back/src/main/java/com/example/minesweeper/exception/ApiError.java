@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ApiError {
@@ -14,7 +15,7 @@ public class ApiError {
   private String message;
   private String debugMessage;
   private Integer code;
-  private List<String> errors;
+  private List<String> errors = new ArrayList<>();
 
   private ApiError() {
     timestamp = LocalDateTime.now();

@@ -44,20 +44,22 @@ public class Cell {
     }
 
     public void applyAction(Action action) {
-        switch(action) {
-            case OPEN:
-                if (!this.state.equals(CellState.OPENED)) this.state = CellState.OPENED;
-                break;
-            case FLAG:
-                if (!this.state.equals(CellState.OPENED)) this.state = CellState.FLAGGED;
-                break;
-             case QUESTION_MARK:
-                 if (!this.state.equals(CellState.OPENED)) this.state = CellState.QUESTION_MARK;
-                 break;
-            case CLEAR:
-                if (!this.state.equals(CellState.OPENED)) this.state = CellState.UNOPENED;
-                break;
-            default:
+        if (!this.state.equals(CellState.OPENED)) {
+            switch(action) {
+                case OPEN:
+                    this.state = CellState.OPENED;
+                    break;
+                case FLAG:
+                    this.state = CellState.FLAGGED;
+                    break;
+                case QUESTION_MARK:
+                    this.state = CellState.QUESTION_MARK;
+                    break;
+                case CLEAR:
+                    this.state = CellState.UNOPENED;
+                    break;
+                default:
+            }
         }
     }
 

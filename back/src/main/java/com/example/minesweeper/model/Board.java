@@ -66,7 +66,7 @@ public class Board {
         calculateAdjacentMines();
     }
 
-    private Optional<Cell> getByMatrixNotation(int row, int column) {
+    private Optional<Cell> getCellByMatrixNotation(int row, int column) {
         try {
             return Optional.of(this.rows.get(row).getCells().get(column));
         } catch (IndexOutOfBoundsException e) {
@@ -89,11 +89,12 @@ public class Board {
     }
 
     private void openAdjacentCell(int row, int column) {
-        this.getByMatrixNotation(row, column).ifPresent( it -> {
-            if (it.getSurroundingMines() == 0 && !it.isMined()
-                    && !CellState.OPENED.equals(it.getState())) {
+        this.getCellByMatrixNotation(row, column).ifPresent(it -> {
+            if (!it.isMined() && !CellState.OPENED.equals(it.getState())) {
                 it.setState(CellState.OPENED);
-                openSurroundingCells(row, column);
+                if (it.getSurroundingMines() == 0) {
+                    openSurroundingCells(row, column);
+                }
             }
         });
     }
@@ -124,7 +125,7 @@ public class Board {
     }
 
     private void countAdjacentMines(int i, int j, AtomicInteger mineQuantity) {
-        this.getByMatrixNotation(i, j).ifPresent( it -> { if(it.isMined()) mineQuantity.getAndIncrement(); } );
+        this.getCellByMatrixNotation(i, j).ifPresent(it -> { if(it.isMined()) mineQuantity.getAndIncrement(); } );
 
     }
 

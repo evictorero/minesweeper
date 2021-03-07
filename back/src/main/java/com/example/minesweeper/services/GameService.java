@@ -1,8 +1,8 @@
 package com.example.minesweeper.services;
 
 import com.example.minesweeper.exception.BadRequestException;
+import com.example.minesweeper.exception.GameIsNotInProgressException;
 import com.example.minesweeper.exception.NotFoundException;
-import com.example.minesweeper.model.Board;
 import com.example.minesweeper.model.Game;
 import com.example.minesweeper.model.GameResult;
 import com.example.minesweeper.model.GameState;
@@ -58,7 +58,7 @@ public class GameService {
         }
 
         if (game.getState() != GameState.INPROGRESS) {
-            throw new BadRequestException("Game is not in progress");
+            throw new GameIsNotInProgressException();
         }
     }
 

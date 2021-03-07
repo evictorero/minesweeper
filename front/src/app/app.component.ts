@@ -67,6 +67,7 @@ export class AppComponent {
 
   loadGame(game: Game) {
     this.gameInProgress = game;
+    this.stopConfetti();
   }
 
   startGame() {
@@ -80,10 +81,8 @@ export class AppComponent {
 
   createGame() {
     this.startGameDTO.name = this.currentUserName;
-    this.stopConfetti();
-
     this.gameService.create(this.startGameDTO).subscribe(game => {
-      this.gameInProgress = game;
+      this.loadGame(game);
       this.games.push(game);
     });
   }

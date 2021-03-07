@@ -41,7 +41,7 @@ public class Game {
 
     public Game(StartGameDTO startGameDTO) {
         this.startTime = Instant.now();
-        this.userName = startGameDTO.getName();
+        this.userName = startGameDTO.getName().toLowerCase();
         this.board = new Board(startGameDTO.getRowSize(), startGameDTO.getColumnSize(), startGameDTO.getMinePercentage());
         this.board.setGame(this);
         this.state = GameState.INPROGRESS;
@@ -61,7 +61,7 @@ public class Game {
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.userName = userName.toLowerCase();
     }
 
     public Board getBoard() {
@@ -79,6 +79,10 @@ public class Game {
     public void applyMove(Action action, int row, int column) {
         var cell = this.getBoard().getRows().get(row).getCells().get(column);
         cell.applyAction(action);
+        evaluateActionApplied(action, row, column, cell);
+    }
+
+    private void evaluateActionApplied(Action action, int row, int column, Cell cell) {
         if (Action.OPEN.equals(action)) {
             if (cell.isMined()) {
                 logger.info("game lost");
@@ -89,10 +93,7 @@ public class Game {
                 this.getBoard().openSurroundingCells(row, column);
             }
         }
-        analizeGameStatus();
-    }
 
-    private void analizeGameStatus() {
         if (this.getBoard().allRemainingCellsHasAMine()) {
             this.winGame();
         }

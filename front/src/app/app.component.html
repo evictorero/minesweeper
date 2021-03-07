@@ -29,7 +29,7 @@
 
     <ul>
         <li class="link" *ngFor="let game of games" (click)="loadGame(game)">
-            Game:{{ game.id }} - {{ game.state }} {{ game.result}} - {{ game.timeElapsedFormatted }}
+            Game:{{ game.id }} - {{ game.state }} {{ game.timeElapsedFormatted}} <span *ngIf="game.state == 'FINISHED'"> - {{ game.result }}</span>
         </li>
     </ul>
 

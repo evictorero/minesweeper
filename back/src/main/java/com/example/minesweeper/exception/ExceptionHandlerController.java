@@ -36,7 +36,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
   @ExceptionHandler(RuntimeException.class)
   protected ResponseEntity<Object> runtimeException(RuntimeException ex, WebRequest request) {
     ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
-    apiError.setMessage("Internal server error");
+    apiError.setMessage("There was an error, please contact administrators");
     logger.error(ex.getMessage());
     return buildResponseEntity(apiError);
   }

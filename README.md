@@ -35,12 +35,22 @@ The app will automatically reload if you change any of the source files.
 
 `make run`
 
-## Swagger
-http://localhost:8080/swagger-ui.html#/
+## Run from docker
+
+Run app from pre compiled JAR with docker executing `docker-compose up` from docker folder
 
 ## Hosted on Heroku
 https://minesweeper-emv.herokuapp.com/
 
-## Docker
+## API Documentation with Swagger
+https://minesweeper-emv.herokuapp.com/swagger-ui.html
 
-Run app from pre compiled JAR with docker executing `docker-compose up` from docker folder
+## API Documentation with postman
+https://documenter.getpostman.com/view/932175/Tz5jg1Mr
+
+## How to play and what to expect
+
+Creation game supports 3 parameters, board size (rows and columns) and mine percentage.
+This game allow to play multiple games by user and pause/resume tracking time for each one. 
+It supports flag and question mark.
+

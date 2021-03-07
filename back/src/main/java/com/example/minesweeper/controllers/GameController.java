@@ -40,7 +40,7 @@ public class GameController {
 
     @GetMapping
     public List<Game> findGames(@RequestParam String userName) {
-        return this.gameService.findGames(userName);
+        return this.gameService.findGames(userName.toLowerCase());
     }
 
     @PatchMapping("{id}/play")
@@ -57,11 +57,6 @@ public class GameController {
     @PatchMapping("{id}/resume")
     public Game resume(@PathVariable(value = "id") Long gameId) {
         return this.gameService.resume(gameId);
-    }
-
-    @PatchMapping("{id}/end")
-    public Game end(@PathVariable(value = "id") Long gameId) {
-        return this.gameService.end(gameId);
     }
 
 }
